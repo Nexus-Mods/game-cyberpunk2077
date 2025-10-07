@@ -15,6 +15,7 @@ import {
 import {
   detectCetCanonLayout,
   cetCanonLayout,
+  detectCetPluginLayout,
 } from "./installer.cet";
 import {
   promptToFallbackOrFailOnUnresolvableLayout,
@@ -87,6 +88,7 @@ export const testForMultiTypeMod: V2077TestFunc = (
   fileTree: FileTree,
 ): Promise<VortexTestResult> => {
   const hasCanonCet = detectCetCanonLayout(fileTree);
+  const hasPluginCet = detectCetPluginLayout(fileTree);
   const hasCanonRed4Ext = detectRed4ExtCanonOnlyLayout(fileTree);
   const hasBasedirRed4Ext = detectRed4ExtBasedirLayout(fileTree);
 
@@ -105,6 +107,7 @@ export const testForMultiTypeMod: V2077TestFunc = (
       hasAllowedConfigJson,
       hasAllowedConfigXml,
       hasCanonCet,
+      hasPluginCet,
       hasAllowedREDmods,
       hasAllowedRedscript,
       hasCanonRed4Ext,

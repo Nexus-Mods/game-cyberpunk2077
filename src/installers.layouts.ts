@@ -484,7 +484,11 @@ export const enum AsiLayout {
 // CET
 
 export const enum CetLayout {
-  Canon = `.\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[modname]\\init.lua + [any files + subdirs]`,
+  Canon = `
+          - .\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[modname]\\init.lua
+          - .\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[modname]\\[any files + subdirs]
+          - .\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[pluginmod]\\[any files + subdirs]  (plugin only)
+          `,
 }
 export const CET_GLOBAL_INI = path.normalize(`bin/x64/global.ini`);
 export const CET_MOD_CANONICAL_INIT_FILE = `init.lua`;

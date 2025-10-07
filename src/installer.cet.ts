@@ -64,21 +64,38 @@ const allCanonicalCetFiles = (files: string[]) =>
 
 // CET
 
-const matchCetInitLua = (f: string): boolean =>
-  path.basename(f) === CET_MOD_CANONICAL_INIT_FILE;
+const matchCetInitLua = (filePath: string): boolean =>
+  path.basename(filePath) === CET_MOD_CANONICAL_INIT_FILE;
+
+const notMatchCetInitLua = (filePath: string): boolean =>
+  path.basename(filePath) !== CET_MOD_CANONICAL_INIT_FILE;
 
 const findCanonicalCetDirs = (fileTree: FileTree): string[] =>
   findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, matchCetInitLua, fileTree);
 
+const findPluginCetDirs = (fileTree: FileTree): string[] =>
+  findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, notMatchCetInitLua, fileTree);
+
 export const detectCetCanonLayout = (fileTree: FileTree): boolean =>
+  // don't worry about correctness so much here. if there is one valid cet mod, that is good enough
   findCanonicalCetDirs(fileTree).length > 0;
+
+export const detectCetPluginLayout = (fileTree: FileTree): boolean =>
+  // don't worry about correctness so much here. if there is one valid cet mod, that is good enough
+  findPluginCetDirs(fileTree).length > 0;
 
 export const cetCanonLayout = (
   api: VortexApi,
   _modName: string,
   fileTree: FileTree,
 ): MaybeInstructions => {
-  const allCanonCetFiles = findCanonicalCetDirs(fileTree).flatMap((namedSubdir) =>
+
+  const allCetSubdirs = [
+    ...findCanonicalCetDirs(fileTree),
+    ...findPluginCetDirs(fileTree),
+  ];
+
+  const allCanonCetFiles = allCetSubdirs.flatMap((namedSubdir) =>
     filesUnder(namedSubdir, Glob.Any, fileTree));
 
   if (allCanonCetFiles.length < 1) {
@@ -109,15 +126,17 @@ export const testForCetMod: V2077TestFunc = (
   fileTree: FileTree,
 ): Promise<VortexTestResult> => {
   const hasCetFilesInANamedModDir = detectCetCanonLayout(fileTree);
+  const hasCetFilesAsPluginMod = detectCetPluginLayout(fileTree);
 
-  if (!hasCetFilesInANamedModDir) {
+  const hasCetInstallableFiles = hasCetFilesInANamedModDir || hasCetFilesAsPluginMod;
+  if (!hasCetInstallableFiles) {
     return Promise.resolve({ supported: false, requiredFiles: [] });
   }
 
-  api.log(`info`, `Matching CET installer: ${hasCetFilesInANamedModDir}`);
+  api.log(`info`, `Matching CET installer: ${hasCetInstallableFiles}`);
 
   return Promise.resolve({
-    supported: hasCetFilesInANamedModDir,
+    supported: hasCetInstallableFiles,
     requiredFiles: [],
   });
 };
