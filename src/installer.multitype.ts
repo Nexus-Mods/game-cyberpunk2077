@@ -101,6 +101,7 @@ export const testForMultiTypeMod: V2077TestFunc = (
   const hasAtLeastTwoTypes =
     [
       hasAllowedArchives,
+      hasAllowedAudioware,
       hasAllowedConfigJson,
       hasAllowedConfigXml,
       hasCanonCet,
@@ -195,7 +196,7 @@ export const installMultiTypeMod: V2077InstallFunc = async (
   const tweakXLInstructions =
     tweakXLAllowedInMultiInstructions(api, fileTree);
 
-    const audiowareInstructions =
+  const audiowareInstructions =
     audiowareAllowedInMultiInstructions(api, fileTree);
 
   const redscriptInstructions =
