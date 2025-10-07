@@ -70,11 +70,17 @@ const matchCetInitLua = (filePath: string): boolean =>
 const notMatchCetInitLua = (filePath: string): boolean =>
   path.basename(filePath) !== CET_MOD_CANONICAL_INIT_FILE;
 
+const matchOrMatchNotCetInitLua = (filePath: string): boolean =>
+  matchCetInitLua(filePath) || notMatchCetInitLua(filePath);
+
 const findCanonicalCetDirs = (fileTree: FileTree): string[] =>
   findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, matchCetInitLua, fileTree);
 
 const findPluginCetDirs = (fileTree: FileTree): string[] =>
   findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, notMatchCetInitLua, fileTree);
+
+const findAnyCetDirs = (fileTree: FileTree): string[] =>
+  findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, matchOrMatchNotCetInitLua, fileTree);
 
 export const detectCetCanonLayout = (fileTree: FileTree): boolean =>
   // don't worry about correctness so much here. if there is one valid cet mod, that is good enough
@@ -89,13 +95,7 @@ export const cetCanonLayout = (
   _modName: string,
   fileTree: FileTree,
 ): MaybeInstructions => {
-
-  const allCetSubdirs = [
-    ...findCanonicalCetDirs(fileTree),
-    ...findPluginCetDirs(fileTree),
-  ];
-
-  const allCanonCetFiles = allCetSubdirs.flatMap((namedSubdir) =>
+  const allCanonCetFiles = findAnyCetDirs(fileTree).flatMap((namedSubdir) =>
     filesUnder(namedSubdir, Glob.Any, fileTree));
 
   if (allCanonCetFiles.length < 1) {
