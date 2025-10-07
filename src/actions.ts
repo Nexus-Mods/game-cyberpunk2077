@@ -11,3 +11,9 @@ export const setREDmodAutoconvertArchivesAction: SettingAction =
     `SET_REDMOD_AUTOCONVERT_ARCHIVES`,
     (enabled: boolean): boolean => enabled,
   );
+
+export const setREDmodFallbackInstallAnywaysAction: SettingAction =
+  createAction<boolean, boolean>(
+    `SET_REDMOD_FALLBACK_INSTALL_ALWAYS`,
+    (enabled: boolean): boolean => enabled,
+  );

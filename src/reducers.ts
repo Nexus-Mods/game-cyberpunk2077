@@ -12,6 +12,8 @@ export const makeSettingsReducer = (settingsDefaultsUnnested: DynamicFeatureDefa
   reducers: {
     [actions.setREDmodAutoconvertArchivesAction.toString()]: (stateSliceForJustOurStuff, payload: boolean) =>
       storeSetDynamicFeature(vortexUtil, DynamicFeature.REDmodAutoconvertArchives, stateSliceForJustOurStuff, payload),
+    [actions.setREDmodFallbackInstallAnywaysAction.toString()]: (stateSliceForJustOurStuff, payload: boolean) =>
+      storeSetDynamicFeature(vortexUtil, DynamicFeature.REDmodFallbackInstallAnyways, stateSliceForJustOurStuff, payload),
   },
   defaults: settingsDefaultsUnnested,
 });

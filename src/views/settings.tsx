@@ -9,7 +9,7 @@ import {
   Toggle,
   util as vortexUtil,
 } from 'vortex-api';
-import { setREDmodAutoconvertArchivesAction } from '../actions';
+import { setREDmodAutoconvertArchivesAction, setREDmodFallbackInstallAnywaysAction } from '../actions';
 import {
   DynamicFeature,
   storeGetDynamicFeature,
@@ -23,10 +23,12 @@ interface IBaseProps {
 
 interface IConnectedProps {
   redmodAutoconvertArchives: boolean;
+  redmodFallbackInstallAnyways: boolean;
 }
 
 interface IActionProps {
   onREDmodAutoconvertArchives: (enable: boolean) => void;
+  onREDmodFallbackInstallAnyways: (enable: boolean) => void;
 }
 
 type IProps = IBaseProps & IConnectedProps & IActionProps;
@@ -36,6 +38,8 @@ const Settings = (props: IProps): JSX.Element => {
     t,
     redmodAutoconvertArchives,
     onREDmodAutoconvertArchives,
+    redmodFallbackInstallAnyways,
+    onREDmodFallbackInstallAnyways,
   } = props;
   return (
     <div>
@@ -55,17 +59,37 @@ const Settings = (props: IProps): JSX.Element => {
             `)}\n\n`)}
         </More>
       </Toggle>
+      <Toggle
+        checked={redmodFallbackInstallAnyways}
+        onToggle={onREDmodFallbackInstallAnyways}
+      >
+        {t(`Don't prompt when reaching the fallback installer`)}
+        <More
+          id='red-fallback-install-setting'
+          name={t(`Do NOT prompt on fallback installer`)}>
+          {t(`${squashAllWhitespace(`
+            Usually, when you are installing mods and we can't figure out what you are
+            installing, we will tell you that and let you cancel to make changes or
+            install anyways (and make changes after the fact. This setting hides
+            the prompt we would be showing in that case. Be warned that you could end up
+            installing something wrong if the mod is packaged wrong.
+            `)}\n\n`)}
+        </More>
+      </Toggle>
     </div>
   );
 };
 
 export const mapStateToProps = (fullVortexState: unknown): IConnectedProps => ({
   redmodAutoconvertArchives: storeGetDynamicFeature(vortexUtil, DynamicFeature.REDmodAutoconvertArchives, fullVortexState),
+  redmodFallbackInstallAnyways:
+    storeGetDynamicFeature(vortexUtil, DynamicFeature.REDmodFallbackInstallAnyways, fullVortexState),
 });
 
 
 export const mapDispatchToProps = (dispatch: ThunkDispatch<VortexState, null, Redux.Action>): IActionProps => ({
   onREDmodAutoconvertArchives: (enable: boolean) => dispatch(setREDmodAutoconvertArchivesAction(enable)),
+  onREDmodFallbackInstallAnyways: (enable: boolean) => dispatch(setREDmodFallbackInstallAnywaysAction(enable)),
 });
 
 export default

@@ -275,5 +275,9 @@ export interface InstallerWithPriority extends Installer {
 export const enum InstallDecision {
   UserWantsToProceed = `User explicitly wants to proceed with the installation`,
 
+  UserAlwaysProceeds = `User imlicitly wants to proceed with the installation based on settings`,
+
+  UserWantsToProceedAndRemember = `User explicitly wants to proceed with the installation and never be asked again`,
+
   UserWantsToCancel = `User explicitly wants to cancel the installation`,
 }

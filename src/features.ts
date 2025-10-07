@@ -52,6 +52,7 @@ export const enum StaticFeature {
 // Need to be underscored since it isn't always just a string... thanks react...
 export const enum DynamicFeature {
   REDmodAutoconvertArchives = `v2077_feature_redmod_autoconvert_archives`,
+  REDmodFallbackInstallAnyways = `v2077_feature_redmod_fallback_install_anyways`,
 }
 
 export type FeatureSettingsPathInVortex = Record<keyof typeof DynamicFeature, string[]>;
@@ -77,6 +78,7 @@ export const BaselineFeatureSetForTests: FeatureSet = {
   REDmodLoadOrder: FeatureState.Disabled,
   REDmodAutoconversionTag: FeatureState.Enabled,
   REDmodAutoconvertArchives: () => FeatureState.Disabled,
+  REDmodFallbackInstallAnyways: () => FeatureState.Disabled,
 };
 
 export const StaticFeaturesForStartup: VersionedStaticFeatureSet = {
@@ -93,6 +95,7 @@ export const StaticFeaturesForStartup: VersionedStaticFeatureSet = {
 
 export const DefaultEnabledStateForDynamicFeatures: DynamicFeatureDefaults = {
   [DynamicFeature.REDmodAutoconvertArchives]: false,
+  [DynamicFeature.REDmodFallbackInstallAnyways]: false,
 };
 
 
@@ -138,6 +141,10 @@ export const FullFeatureSetFromStaticAndDynamic = (
   REDmodAutoconvertArchives: () =>
     boolAsFeature(
       storeGetDynamicFeature(storeUtil, DynamicFeature.REDmodAutoconvertArchives, vortexExtApi.store.getState()),
+    ),
+  REDmodFallbackInstallAnyways: () =>
+    boolAsFeature(
+      storeGetDynamicFeature(storeUtil, DynamicFeature.REDmodFallbackInstallAnyways, vortexExtApi.store.getState()),
     ),
 });
 

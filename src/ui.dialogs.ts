@@ -22,9 +22,11 @@ import {
   VortexApi,
   VortexDialogResult,
 } from "./vortex-wrapper";
+import { FeatureSet, IsDynamicFeatureEnabled } from "./features";
 
 export const enum InstallChoices {
   Proceed = `Yes, Install To Staging Anyway`,
+  ProceedAndRemember = `Yes, Install And Don't Ask Again`,
   Cancel = `No, Cancel Installation`,
 }
 
@@ -46,6 +48,14 @@ const INSTRUCTIONS_TO_REPORT_ISSUE = `
 
     - [${EXTENSION_URL_NEXUS}](${EXTENSION_URL_NEXUS}) (or just search for ${EXTENSION_NAME_NEXUS})
     - [${EXTENSION_URL_GITHUB}](${EXTENSION_URL_GITHUB})
+    `;
+
+const INSTRUCTIONS_TO_IGNORE_FOREVER = `
+    If you feel you are getting this message too much and want to
+    stop knowing when you have a choice, you can select the button labeled
+    "Yes, Install And Don't Ask Again."
+
+    Should you want to reverse your decision, you can change the settings later.
     `;
 
 // This'll be converted to a reject down the line somewhere
@@ -147,13 +157,24 @@ export const promptUserToInstallOrCancel = async (
     {
       md: heredoc(explanation),
     },
-    [{ label: InstallChoices.Cancel }, { label: InstallChoices.Proceed }],
+    [{ label: InstallChoices.Cancel },
+     { label: InstallChoices.Proceed },
+     { label: InstallChoices.ProceedAndRemember },
+    ],
   );
 
-  const installDecision =
-    dialogResponse.action === InstallChoices.Proceed
-      ? InstallDecision.UserWantsToProceed
-      : InstallDecision.UserWantsToCancel;
+  const decider = (res: VortexDialogResult): InstallDecision => {
+    switch (res.action) {
+      case InstallChoices.ProceedAndRemember:
+        return InstallDecision.UserWantsToProceedAndRemember;
+      case InstallChoices.Proceed:
+        return InstallDecision.UserWantsToProceed;
+      default:
+        return InstallDecision.UserWantsToCancel;
+    }
+  };
+
+  const installDecision = decider(dialogResponse);
 
   return installDecision;
 };
@@ -255,8 +276,12 @@ export const promptUserToInstallOrCancelOnDeprecatedCoreMod = async (
 
 export const promptUserToInstallOrCancelOnReachingFallback = (
   api: VortexApi,
+  features: FeatureSet,
   files: string[],
 ): Promise<InstallDecision> => {
+  if (IsDynamicFeatureEnabled(features.REDmodFallbackInstallAnyways)) {
+    return Promise.resolve(InstallDecision.UserWantsToProceed);
+  }
   api.log(`info`, `Fallback installer reached, prompting to proceed/cancel`, files);
 
   const fallbackTitle = `You Have Reached The Fallback Installer!`;
@@ -266,6 +291,8 @@ export const promptUserToInstallOrCancelOnReachingFallback = (
     reached the fallback installer (ta-dah!)
 
     ${INSTRUCTIONS_TO_FIX_IN_STAGING}
+
+    ${INSTRUCTIONS_TO_IGNORE_FOREVER}
 
     ${INSTRUCTIONS_TO_REPORT_ISSUE}
 
