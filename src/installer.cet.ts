@@ -70,17 +70,11 @@ const matchCetInitLua = (filePath: string): boolean =>
 const notMatchCetInitLua = (filePath: string): boolean =>
   path.basename(filePath) !== CET_MOD_CANONICAL_INIT_FILE;
 
-const matchOrMatchNotCetInitLua = (filePath: string): boolean =>
-  matchCetInitLua(filePath) || notMatchCetInitLua(filePath);
-
 const findCanonicalCetDirs = (fileTree: FileTree): string[] =>
   findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, matchCetInitLua, fileTree);
 
 const findPluginCetDirs = (fileTree: FileTree): string[] =>
   findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, notMatchCetInitLua, fileTree);
-
-const findAnyCetDirs = (fileTree: FileTree): string[] =>
-  findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, matchOrMatchNotCetInitLua, fileTree);
 
 export const detectCetCanonLayout = (fileTree: FileTree): boolean =>
   // don't worry about correctness so much here. if there is one valid cet mod, that is good enough
@@ -95,7 +89,7 @@ export const cetCanonLayout = (
   _modName: string,
   fileTree: FileTree,
 ): MaybeInstructions => {
-  const allCanonCetFiles = findAnyCetDirs(fileTree).flatMap((namedSubdir) =>
+  const allCanonCetFiles = findCanonicalCetDirs(fileTree).flatMap((namedSubdir) =>
     filesUnder(namedSubdir, Glob.Any, fileTree));
 
   if (allCanonCetFiles.length < 1) {
@@ -105,6 +99,25 @@ export const cetCanonLayout = (
 
   return {
     kind: CetLayout.Canon,
+    instructions: instructionsForSameSourceAndDestPaths(allCanonCetFiles),
+  };
+};
+
+export const cetPluginLayout = (
+  api: VortexApi,
+  _modName: string,
+  fileTree: FileTree,
+): MaybeInstructions => {
+  const allCanonCetFiles = findPluginCetDirs(fileTree).flatMap((namedSubdir) =>
+    filesUnder(namedSubdir, Glob.Any, fileTree));
+
+  if (allCanonCetFiles.length < 1) {
+    api.log(`debug`, `No plugin CET files found.`);
+    return NoInstructions.NoMatch;
+  }
+
+  return {
+    kind: CetLayout.PluginOnly,
     instructions: instructionsForSameSourceAndDestPaths(allCanonCetFiles),
   };
 };
@@ -126,17 +139,15 @@ export const testForCetMod: V2077TestFunc = (
   fileTree: FileTree,
 ): Promise<VortexTestResult> => {
   const hasCetFilesInANamedModDir = detectCetCanonLayout(fileTree);
-  const hasCetFilesAsPluginMod = detectCetPluginLayout(fileTree);
 
-  const hasCetInstallableFiles = hasCetFilesInANamedModDir || hasCetFilesAsPluginMod;
-  if (!hasCetInstallableFiles) {
+  if (!hasCetFilesInANamedModDir) {
     return Promise.resolve({ supported: false, requiredFiles: [] });
   }
 
-  api.log(`info`, `Matching CET installer: ${hasCetInstallableFiles}`);
+  api.log(`info`, `Matching CET installer: ${hasCetFilesInANamedModDir}`);
 
   return Promise.resolve({
-    supported: hasCetInstallableFiles,
+    supported: hasCetFilesInANamedModDir,
     requiredFiles: [],
   });
 };

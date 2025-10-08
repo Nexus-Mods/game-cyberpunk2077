@@ -487,7 +487,9 @@ export const enum CetLayout {
   Canon = `
           - .\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[modname]\\init.lua
           - .\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[modname]\\[any files + subdirs]
-          - .\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[pluginmod]\\[any files + subdirs]  (plugin only)
+          `,
+  PluginOnly = `
+          - .\\bin\\x64\\plugins\\cyber_engine_tweaks\\mods\\[pluginmod]\\[any files + subdirs]
           `,
 }
 export const CET_GLOBAL_INI = path.normalize(`bin/x64/global.ini`);

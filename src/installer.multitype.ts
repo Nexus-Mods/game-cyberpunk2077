@@ -16,6 +16,7 @@ import {
   detectCetCanonLayout,
   cetCanonLayout,
   detectCetPluginLayout,
+  cetPluginLayout,
 } from "./installer.cet";
 import {
   promptToFallbackOrFailOnUnresolvableLayout,
@@ -181,6 +182,7 @@ export const installMultiTypeMod: V2077InstallFunc = async (
   // Defect: https://github.com/E1337Kat/cyberpunk2077_ext_redux/issues/96
   const allInstructionSets: LayoutToInstructions[] = [
     cetCanonLayout,
+    cetPluginLayout,
     red4extBasedirLayout,
     red4extCanonLayout,
   ];
