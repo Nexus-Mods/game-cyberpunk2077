@@ -55,7 +55,7 @@ const INSTRUCTIONS_TO_IGNORE_FOREVER = `
     stop knowing when you have a choice, you can select the button labeled
     "Yes, Install And Don't Ask Again."
 
-    Should you want to reverse your decision, you can change the settings later.
+    Should you want to reverse your decision, you can change it in Settings.
     `;
 
 // This'll be converted to a reject down the line somewhere

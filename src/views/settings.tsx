@@ -70,7 +70,7 @@ const Settings = (props: IProps): JSX.Element => {
           {t(`${squashAllWhitespace(`
             Usually, when you are installing mods and we can't figure out what you are
             installing, we will tell you that and let you cancel to make changes or
-            install anyways (and make changes after the fact. This setting hides
+            install anyways (and make changes after the fact). This setting hides
             the prompt we would be showing in that case. Be warned that you could end up
             installing something wrong if the mod is packaged wrong.
             `)}\n\n`)}
