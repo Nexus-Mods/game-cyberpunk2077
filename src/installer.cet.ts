@@ -67,58 +67,28 @@ const allCanonicalCetFiles = (files: string[]) =>
 const matchCetInitLua = (filePath: string): boolean =>
   path.basename(filePath) === CET_MOD_CANONICAL_INIT_FILE;
 
-const notMatchCetInitLua = (filePath: string): boolean =>
-  path.basename(filePath) !== CET_MOD_CANONICAL_INIT_FILE;
-
 const findCanonicalCetDirs = (fileTree: FileTree): string[] =>
   findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, matchCetInitLua, fileTree);
-
-const findPluginCetDirs = (fileTree: FileTree): string[] =>
-  findDirectSubdirsWithSome(CET_MOD_CANONICAL_PATH_PREFIX, notMatchCetInitLua, fileTree);
 
 export const detectCetCanonLayout = (fileTree: FileTree): boolean =>
   // don't worry about correctness so much here. if there is one valid cet mod, that is good enough
   findCanonicalCetDirs(fileTree).length > 0;
 
-export const detectCetPluginLayout = (fileTree: FileTree): boolean =>
-  // don't worry about correctness so much here. if there is one valid cet mod, that is good enough
-  findPluginCetDirs(fileTree).length > 0;
-
-export const cetCanonLayout = (
+export const cetLazyLayout = (
   api: VortexApi,
   _modName: string,
   fileTree: FileTree,
 ): MaybeInstructions => {
-  const allCanonCetFiles = findCanonicalCetDirs(fileTree).flatMap((namedSubdir) =>
-    filesUnder(namedSubdir, Glob.Any, fileTree));
+  const allCetFiles = filesUnder(CET_MOD_CANONICAL_PATH_PREFIX, Glob.Any, fileTree);
 
-  if (allCanonCetFiles.length < 1) {
+  if (allCetFiles.length < 1) {
     api.log(`debug`, `No canonical CET files found.`);
     return NoInstructions.NoMatch;
   }
 
   return {
     kind: CetLayout.Canon,
-    instructions: instructionsForSameSourceAndDestPaths(allCanonCetFiles),
-  };
-};
-
-export const cetPluginLayout = (
-  api: VortexApi,
-  _modName: string,
-  fileTree: FileTree,
-): MaybeInstructions => {
-  const allCanonCetFiles = findPluginCetDirs(fileTree).flatMap((namedSubdir) =>
-    filesUnder(namedSubdir, Glob.Any, fileTree));
-
-  if (allCanonCetFiles.length < 1) {
-    api.log(`debug`, `No plugin CET files found.`);
-    return NoInstructions.NoMatch;
-  }
-
-  return {
-    kind: CetLayout.PluginOnly,
-    instructions: instructionsForSameSourceAndDestPaths(allCanonCetFiles),
+    instructions: instructionsForSameSourceAndDestPaths(allCetFiles),
   };
 };
 

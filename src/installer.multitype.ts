@@ -14,9 +14,7 @@ import {
 } from "./installer.archive";
 import {
   detectCetCanonLayout,
-  cetCanonLayout,
-  detectCetPluginLayout,
-  cetPluginLayout,
+  cetLazyLayout,
 } from "./installer.cet";
 import {
   promptToFallbackOrFailOnUnresolvableLayout,
@@ -89,7 +87,6 @@ export const testForMultiTypeMod: V2077TestFunc = (
   fileTree: FileTree,
 ): Promise<VortexTestResult> => {
   const hasCanonCet = detectCetCanonLayout(fileTree);
-  const hasPluginCet = detectCetPluginLayout(fileTree);
   const hasCanonRed4Ext = detectRed4ExtCanonOnlyLayout(fileTree);
   const hasBasedirRed4Ext = detectRed4ExtBasedirLayout(fileTree);
 
@@ -108,7 +105,6 @@ export const testForMultiTypeMod: V2077TestFunc = (
       hasAllowedConfigJson,
       hasAllowedConfigXml,
       hasCanonCet,
-      hasPluginCet,
       hasAllowedREDmods,
       hasAllowedRedscript,
       hasCanonRed4Ext,
@@ -181,8 +177,7 @@ export const installMultiTypeMod: V2077InstallFunc = async (
   //
   // Defect: https://github.com/E1337Kat/cyberpunk2077_ext_redux/issues/96
   const allInstructionSets: LayoutToInstructions[] = [
-    cetCanonLayout,
-    cetPluginLayout,
+    cetLazyLayout,
     red4extBasedirLayout,
     red4extCanonLayout,
   ];
