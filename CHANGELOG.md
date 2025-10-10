@@ -1,3 +1,40 @@
+# Cyberpunk2077 Vortex Support v0.12.0 "Brendan"
+
+Brendan is the best boy because he was a true AI for the people. Unlike Brendan though, this release didn't use any AI. So why did I name this release after the sweetest boy? Because it exists. Like brendan. Also like Brendan, a cold Nicola can help ease all your worries.
+
+Update directly in Vortex, or get the release on the Nexus page (or Github): https://www.nexusmods.com/site/mods/196?tab=files
+
+Why use a mod manager? In addition to quality-of-life improvements like automatically fixing many common types of mod structure
+problems that you'd have to do by hand, clear (?) instructions on any possile additional steps for any given mod or problem
+encountered, and the easy ability to enable/disable mods, you also get profiles to manage separate sets of mods more easily,
+update notifications, much easier game upgrades, easy toggling between multiple versions or variants (e.g. colors) of a mod,
+Collections, and all sorts of nice things. And you can of course install mods from any source - even the mod showcase channel, and
+they do not even need to be in a zipfile. We gotchu.
+
+As always, any feedback and such is appreciated so we can ensure that no bugs or oversights have slipped through our testing - and
+other feedback and ideas are more than welcome! Please get in touch either on Discord, Github, or Nexus (links at the bottom).
+
+## Main Jobs
+
+* ✨ Add ability to not prompt on fallback installer with user setting by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/411
+* ✨ 🐛 [#410] audioware mod issues by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/412
+
+**Full Changelog**: https://github.com/E1337Kat/cyberpunk2077_ext_redux/compare/v0.11.4...v0.12.0
+
+## Detes
+
+This does make it so that the fallbackinstaller can be ignored. You can of course stop ignoring it should you wish, but while ignored, you accept any risk that could come from using the fallback installer.
+
+## Holo at us
+
+Discord: https://discord.gg/7NUQJ2b4ZN (\#cyberpunk2077-vortex-support on the CP2077 Modding Community server)
+Github: https://github.com/E1337Kat/cyberpunk2077_ext_redux
+Nexus: https://www.nexusmods.com/site/mods/196
+
+End of transmission, subject: 'v0.12.0 "Brendan'
+
+---
+
 # Cyberpunk 2077 Vortex Support v0.11.4
 
 > I think I might have forgotten to put up GH releases for the last few changes??? That is very bad form on my part and I apologize. At least this one will be made?
