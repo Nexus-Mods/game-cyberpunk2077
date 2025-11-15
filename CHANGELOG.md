@@ -1,3 +1,39 @@
+# Cyberpunk2077 Vortex Support v0.12.1 "Brendan"
+
+Brendan is the best boy because he was a true AI for the people. Unlike Brendan though, this release didn't use any AI. So why did I name this release after the sweetest boy? Because it exists. Like brendan. Also like Brendan, a cold Nicola can help ease all your worries.
+
+Update directly in Vortex, or get the release on the Nexus page (or Github): https://www.nexusmods.com/site/mods/196?tab=files
+
+Why use a mod manager? In addition to quality-of-life improvements like automatically fixing many common types of mod structure
+problems that you'd have to do by hand, clear (?) instructions on any possile additional steps for any given mod or problem
+encountered, and the easy ability to enable/disable mods, you also get profiles to manage separate sets of mods more easily,
+update notifications, much easier game upgrades, easy toggling between multiple versions or variants (e.g. colors) of a mod,
+Collections, and all sorts of nice things. And you can of course install mods from any source - even the mod showcase channel, and
+they do not even need to be in a zipfile. We gotchu.
+
+As always, any feedback and such is appreciated so we can ensure that no bugs or oversights have slipped through our testing - and
+other feedback and ideas are more than welcome! Please get in touch either on Discord, Github, or Nexus (links at the bottom).
+
+## Main Jobs
+
+- 🐛 [#414] the remember should remember the fallback option, not turn on autoconvert @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/415
+
+**Full Changelog**: https://github.com/E1337Kat/cyberpunk2077_ext_redux/compare/v0.11.4...v0.12.0
+
+## Detes
+
+This does make it so that the fallbackinstaller can be ignored. You can of course stop ignoring it should you wish, but while ignored, you accept any risk that could come from using the fallback installer.
+
+## Holo at us
+
+Discord: https://discord.gg/7NUQJ2b4ZN (\#cyberpunk2077-vortex-support on the CP2077 Modding Community server)
+Github: https://github.com/E1337Kat/cyberpunk2077_ext_redux
+Nexus: https://www.nexusmods.com/site/mods/196
+
+End of transmission, subject: 'v0.12.0 "Brendan'
+
+---
+
 # Cyberpunk2077 Vortex Support v0.12.0 "Brendan"
 
 Brendan is the best boy because he was a true AI for the people. Unlike Brendan though, this release didn't use any AI. So why did I name this release after the sweetest boy? Because it exists. Like brendan. Also like Brendan, a cold Nicola can help ease all your worries.
@@ -16,8 +52,8 @@ other feedback and ideas are more than welcome! Please get in touch either on Di
 
 ## Main Jobs
 
-* ✨ Add ability to not prompt on fallback installer with user setting by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/411
-* ✨ 🐛 [#410] audioware mod issues by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/412
+- ✨ Add ability to not prompt on fallback installer with user setting by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/411
+- ✨ 🐛 [#410] audioware mod issues by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/412
 
 **Full Changelog**: https://github.com/E1337Kat/cyberpunk2077_ext_redux/compare/v0.11.4...v0.12.0
 
@@ -43,11 +79,11 @@ Update directly in Vortex, or get the release on the Nexus page (or Github): htt
 
 ## Main Jobs
 
-* Fixes for AMM, poses & no-longer-required requirement file by @megapatato in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/408
+- Fixes for AMM, poses & no-longer-required requirement file by @megapatato in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/408
 
 ## Cyberdeck Upgrades aka Internal Stuff(tm)
 
-* 👷‍♀️ update CI config by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/407
+- 👷‍♀️ update CI config by @E1337Kat in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/407
 
 **Full Changelog**: [v0.11.1...v0.11.4](https://github.com/E1337Kat/cyberpunk2077_ext_redux/compare/v0.11.1...v0.11.4)
 
@@ -57,7 +93,7 @@ We'll collect any tutorials, walkthroughs and other info on the [Nexus page](htt
 
 ## The Crew
 
-* @megapatato made their first contribution in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/408 Thanks for the help!
+- @megapatato made their first contribution in https://github.com/E1337Kat/cyberpunk2077_ext_redux/pull/408 Thanks for the help!
 
 As always, thanks to all of you for your feedback, suggestions, bug reports, support, and in this case a little patience too!
 
