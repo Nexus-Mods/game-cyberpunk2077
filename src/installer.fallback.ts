@@ -16,7 +16,9 @@ import {
   MaybeInstructions,
   NoInstructions,
 } from "./installers.layouts";
-import { instructionsForSameSourceAndDestPaths } from "./installers.shared";
+import {
+  instructionsForSameSourceAndDestPaths,
+} from "./installers.shared";
 import {
   InstallerType,
   InstallDecision,
@@ -24,14 +26,20 @@ import {
   V2077TestFunc,
   ModInfo,
 } from "./installers.types";
-import { exhaustiveMatchFailure } from "./util.functions";
+import {
+  exhaustiveMatchFailure,
+} from "./util.functions";
 import {
   VortexApi,
   VortexInstallResult,
   VortexTestResult,
 } from "./vortex-wrapper";
-import { FeatureSet } from "./features";
-import { setREDmodAutoconvertArchivesAction } from "./actions";
+import {
+  FeatureSet,
+} from "./features";
+import {
+  setREDmodFallbackInstallAnywaysAction,
+} from "./actions";
 
 export const findFallbackFiles = (fileTree: FileTree): string[] =>
   filesUnder(FILETREE_ROOT, Glob.Any, fileTree);
@@ -100,7 +108,7 @@ export const useFallbackOrFail = (
     }
     case InstallDecision.UserWantsToProceedAndRemember: {
       // Set the setting into the store
-      api.store.dispatch(setREDmodAutoconvertArchivesAction(true));
+      api.store.dispatch(setREDmodFallbackInstallAnywaysAction(true));
       return proceedInstall(api, installerType, fileTree);
     }
     case InstallDecision.UserAlwaysProceeds: {
