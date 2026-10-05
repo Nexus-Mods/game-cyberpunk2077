@@ -17,6 +17,8 @@ import {
   copiedToSamePath,
   movedFromTo,
   REDS_HINTS,
+  FAKE_MOD_NAME_CURRENT_NEXUS,
+  FAKE_STAGING_PATH_CURRENT_NEXUS,
 } from "./utils.helper";
 
 const RedscriptModShouldSucceed = new Map<string, ExampleSucceedingMod>(
@@ -164,6 +166,20 @@ const RedscriptModShouldSucceed = new Map<string, ExampleSucceedingMod>(
       ],
       outInstructions: [
         copiedToSamePath(`${REDS_HINTS}/whatevs.toml`),
+      ],
+    },
+    redsBasedirFromCurrentNexusFilenameInstallsToModNamedSubdir: {
+      expectedInstallerType: InstallerType.Redscript,
+      stagingPath: FAKE_STAGING_PATH_CURRENT_NEXUS,
+      inFiles: [
+        ...REDS_PREFIXES,
+        path.join(`${REDS_PREFIX}/script.reds`),
+      ],
+      outInstructions: [
+        movedFromTo(
+          `${REDS_PREFIX}/script.reds`,
+          `${REDS_PREFIX}/${FAKE_MOD_NAME_CURRENT_NEXUS}/script.reds`,
+        ),
       ],
     },
   }),

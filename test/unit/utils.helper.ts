@@ -174,6 +174,14 @@ export const FAKE_DISK_PATH_FOR_STAGING_PATH = path.join(...FAKE_STAGING_DIRS, F
 
 export const FAKE_MOD_NAME = `Fake Mod For Examples`;
 
+// Nexus's current download filename: name, mod id, version, upload stamp, token.
+export const FAKE_MOD_NAME_CURRENT_NEXUS = `DigitalVixenCore`;
+export const FAKE_STAGING_PATH_CURRENT_NEXUS = path.join(
+  ...FAKE_STAGING_DIR_PREFIXES,
+  `${FAKE_MOD_NAME_CURRENT_NEXUS} 28390 4.9.3 2026-09-28T20-02Z 9ka2kytex.installing`,
+  path.sep,
+);
+
 export const FAKE_MOD_INFO: ModInfo = {
   name: `Fake Mod For Examples`,
   id: `8279`,
