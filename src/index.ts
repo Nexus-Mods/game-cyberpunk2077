@@ -123,10 +123,6 @@ export const findGame = (): string =>
     (game: VortexGameStoreEntry) => game.gamePath,
   );
 
-const requiresGoGLauncher = (): Promise<{ launcher: string; addInfo?: string; }> =>
-  vortexApiLib.util.GameStoreHelper.isGameInstalled(GOGAPP_ID, `gog`).then((gog) =>
-    (gog ? { launcher: `gog`, addInfo: GOGAPP_ID } : undefined));
-
 
 //
 // Setup functions so we don't clutter the main
@@ -233,7 +229,6 @@ const main = (vortexExt: VortexExtensionContext): boolean => {
       symlinks: false,
     },
     getGameVersion,
-    requiresLauncher: requiresGoGLauncher,
     environment: {
       SteamAPPId: STEAMAPP_ID,
     },
