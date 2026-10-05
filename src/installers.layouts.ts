@@ -714,6 +714,8 @@ export const enum RedscriptLayout {
           `,
   Toplevel = `
           .\\*.reds + [any files + subdirs]
+          .\\r6\\config\\redsUserHints\\*.toml
+          .\\r6\\storages\\[any files + subdirs]
           `,
   ConfigOnly = `
           .\\r6\\config\\redsUserHints\\*.toml

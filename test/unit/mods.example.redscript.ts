@@ -232,6 +232,22 @@ const RedscriptModShouldSucceed = new Map<string, ExampleSucceedingMod>(
         copiedToSamePath(`${REDS_STORAGES}/HUDPainter/PRESET.json`),
       ],
     },
+    redsToplevelWithSideFilesKeepsSideFilesInPlace: {
+      expectedInstallerType: InstallerType.Redscript,
+      inFiles: [
+        path.join(`script.reds`),
+        ...REDS_PREFIXES,
+        path.join(`${REDS_HINTS}/whatevs.toml`),
+        ...REDS_STORAGES_PREFIXES,
+        path.join(`${REDS_STORAGES}/HUDPainter/`),
+        path.join(`${REDS_STORAGES}/HUDPainter/PRESET.json`),
+      ],
+      outInstructions: [
+        movedFromTo(`script.reds`, `${REDS_PREFIX}/${FAKE_MOD_NAME}/script.reds`),
+        copiedToSamePath(`${REDS_HINTS}/whatevs.toml`),
+        copiedToSamePath(`${REDS_STORAGES}/HUDPainter/PRESET.json`),
+      ],
+    },
   }),
 );
 
