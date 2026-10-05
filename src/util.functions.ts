@@ -42,6 +42,10 @@ export const jsonpp = (thing: unknown): string => JSON.stringify(thing, null, 2)
 export const S = (thing: unknown): string =>
   jsonp(thing)?.replace(/(\t|\n|\r)+/gm, ` `).replace(/\\+"/gm, `"`) ?? `<failed to stringify ${thing}>`;
 
+// A caught value is unknown, and only some of them carry a code.
+export const getErrorCode = (err: unknown): string | null =>
+  (err instanceof Error && `code` in err && typeof err.code === `string` ? err.code : null);
+
 
 export const identity = <T>(t: T): T => t;
 export const trueish = <T>(t: T): boolean => !!t;

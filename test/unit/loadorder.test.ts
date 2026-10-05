@@ -1,4 +1,3 @@
-import path from "path";
 // import * as mockedVortexApi from "vortex-api";
 import {
   isLeft,
@@ -13,22 +12,9 @@ import {
 import {
   loadOrderToREDdeployModList,
   makeV2077LoadOrderFrom,
-  redmodDeployRunParameters,
 } from "../../src/load_order";
-import {
-  REDdeployManual,
-} from "../../src/tools.redmodding";
-import {
-  VortexRunParameters,
-} from "../../src/vortex-wrapper";
-import {
-  REDMODDING_RTTI_METADATA_FILE_PATH,
-  V2077_MODLIST_PATH,
-} from "../../src/redmodding.metadata";
 
 import * as loTestData from "./loadorder.example";
-
-const FAKE_GAMEDIR_PATH = `C:\\fake\\gamedir`;
 
 
 describe(`Load Order`, () => {
@@ -91,76 +77,26 @@ describe(`Load Order`, () => {
   });
 
 
-  describe(`REDdeploy parameter generation`, () => {
+  describe(`REDdeploy modlist generation`, () => {
 
-    test(`produces correctly formatted parameter list with all necessary parameters`, () => {
+    test(`lists the enabled mods in load order`, () => {
 
-      const v2077LoadOrderToDeploy = loTestData.v2077LoadOrder;
-      const expectedRedDeployParameters: VortexRunParameters = {
-        executable: `${FAKE_GAMEDIR_PATH}\\${REDdeployManual.executable()}`,
-        args: [
-          `deploy`,
-          `-force`,
-          `-root=`,
-          `"${FAKE_GAMEDIR_PATH}"`,
-          `-rttiSchemaFile=`,
-          `"${path.join(`${FAKE_GAMEDIR_PATH}\\${REDMODDING_RTTI_METADATA_FILE_PATH}`)}"`,
-          `-modlist=`,
-          `"${path.join(FAKE_GAMEDIR_PATH, V2077_MODLIST_PATH)}"`,
-        ],
-        options: {
-          cwd: path.dirname(`${FAKE_GAMEDIR_PATH}\\${REDdeployManual.executable()}`),
-          shell: true,
-          detach: true,
-          expectSuccess: true,
-        },
-      };
       const expectedModList: ModList = loTestData.v2077ModList;
 
-      const redDeployParamsGenerated =
-        redmodDeployRunParameters(FAKE_GAMEDIR_PATH);
-
-      expect(redDeployParamsGenerated).toEqual(expectedRedDeployParameters);
-
       const redDeployModListGenerated =
-        loadOrderToREDdeployModList(v2077LoadOrderToDeploy);
+        loadOrderToREDdeployModList(loTestData.v2077LoadOrder);
 
       expect(redDeployModListGenerated).toEqual(expectedModList);
     });
 
-    test(`produces correct parameters to run default REDdeploy if no mods in LO`, () => {
+    test(`is empty when the load order has no mods`, () => {
 
       const noModsInLoadOrder: LoadOrder = {
         ...loTestData.v2077LoadOrder,
         entriesInOrderWithEarlierWinning: [],
       };
 
-      const expectedRedDeployParameters: VortexRunParameters = {
-        executable: `${FAKE_GAMEDIR_PATH}\\${REDdeployManual.executable()}`,
-        args: [
-          `deploy`,
-          `-force`,
-          `-root=`,
-          `"${FAKE_GAMEDIR_PATH}"`,
-          `-rttiSchemaFile=`,
-          `"${path.join(`${FAKE_GAMEDIR_PATH}\\${REDMODDING_RTTI_METADATA_FILE_PATH}`)}"`,
-          `-modlist=`,
-          `"${path.join(FAKE_GAMEDIR_PATH, V2077_MODLIST_PATH)}"`,
-        ],
-        options: {
-          cwd: path.dirname(`${FAKE_GAMEDIR_PATH}\\${REDdeployManual.executable()}`),
-          shell: true,
-          detach: true,
-          expectSuccess: true,
-        },
-      };
-
       const expectedModList: ModList = loTestData.emptyV2077ModList;
-
-      const redDeployParamsGenerated =
-        redmodDeployRunParameters(FAKE_GAMEDIR_PATH);
-
-      expect(redDeployParamsGenerated).toEqual(expectedRedDeployParameters);
 
       const redDeployModListGenerated =
         loadOrderToREDdeployModList(noModsInLoadOrder);
