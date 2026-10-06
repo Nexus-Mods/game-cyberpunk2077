@@ -19,6 +19,8 @@ import {
   REDS_HINTS,
   FAKE_MOD_NAME_CURRENT_NEXUS,
   FAKE_STAGING_PATH_CURRENT_NEXUS,
+  REDS_STORAGES,
+  REDS_STORAGES_PREFIXES,
 } from "./utils.helper";
 
 const RedscriptModShouldSucceed = new Map<string, ExampleSucceedingMod>(
@@ -180,6 +182,70 @@ const RedscriptModShouldSucceed = new Map<string, ExampleSucceedingMod>(
           `${REDS_PREFIX}/script.reds`,
           `${REDS_PREFIX}/${FAKE_MOD_NAME_CURRENT_NEXUS}/script.reds`,
         ),
+      ],
+    },
+    redsCanonicalWithStoragesFiles: {
+      expectedInstallerType: InstallerType.Redscript,
+      inFiles: [
+        ...REDS_PREFIXES,
+        path.join(`${REDS_PREFIX}/rexmod/`),
+        path.join(`${REDS_PREFIX}/rexmod/script.reds`),
+        ...REDS_STORAGES_PREFIXES,
+        path.join(`${REDS_STORAGES}/rexmod/`),
+        path.join(`${REDS_STORAGES}/rexmod/data.json`),
+        path.join(`${REDS_STORAGES}/RedscriptConfigFramework/`),
+        path.join(`${REDS_STORAGES}/RedscriptConfigFramework/rexmod.card.json`),
+        path.join(`${REDS_STORAGES}/RedscriptConfigFramework/rexmod.docs.txt`),
+      ],
+      outInstructions: [
+        copiedToSamePath(`${REDS_PREFIX}/rexmod/script.reds`),
+        copiedToSamePath(`${REDS_STORAGES}/rexmod/data.json`),
+        copiedToSamePath(`${REDS_STORAGES}/RedscriptConfigFramework/rexmod.card.json`),
+        copiedToSamePath(`${REDS_STORAGES}/RedscriptConfigFramework/rexmod.docs.txt`),
+      ],
+    },
+    redsBasedirWithStoragesFiles: {
+      expectedInstallerType: InstallerType.Redscript,
+      inFiles: [
+        ...REDS_PREFIXES,
+        path.join(`${REDS_PREFIX}/script.reds`),
+        ...REDS_STORAGES_PREFIXES,
+        path.join(`${REDS_STORAGES}/RedscriptConfigFramework/`),
+        path.join(`${REDS_STORAGES}/RedscriptConfigFramework/rexmod.card.json`),
+      ],
+      outInstructions: [
+        movedFromTo(
+          `${REDS_PREFIX}/script.reds`,
+          `${REDS_PREFIX}/${FAKE_MOD_NAME}/script.reds`,
+        ),
+        copiedToSamePath(`${REDS_STORAGES}/RedscriptConfigFramework/rexmod.card.json`),
+      ],
+    },
+    redsWithOnlyStoragesFiles: {
+      expectedInstallerType: InstallerType.Redscript,
+      inFiles: [
+        ...REDS_STORAGES_PREFIXES,
+        path.join(`${REDS_STORAGES}/HUDPainter/`),
+        path.join(`${REDS_STORAGES}/HUDPainter/PRESET.json`),
+      ],
+      outInstructions: [
+        copiedToSamePath(`${REDS_STORAGES}/HUDPainter/PRESET.json`),
+      ],
+    },
+    redsToplevelWithSideFilesKeepsSideFilesInPlace: {
+      expectedInstallerType: InstallerType.Redscript,
+      inFiles: [
+        path.join(`script.reds`),
+        ...REDS_PREFIXES,
+        path.join(`${REDS_HINTS}/whatevs.toml`),
+        ...REDS_STORAGES_PREFIXES,
+        path.join(`${REDS_STORAGES}/HUDPainter/`),
+        path.join(`${REDS_STORAGES}/HUDPainter/PRESET.json`),
+      ],
+      outInstructions: [
+        movedFromTo(`script.reds`, `${REDS_PREFIX}/${FAKE_MOD_NAME}/script.reds`),
+        copiedToSamePath(`${REDS_HINTS}/whatevs.toml`),
+        copiedToSamePath(`${REDS_STORAGES}/HUDPainter/PRESET.json`),
       ],
     },
   }),

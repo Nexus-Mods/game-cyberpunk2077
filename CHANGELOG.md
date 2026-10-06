@@ -1,3 +1,24 @@
+# Cyberpunk 2077 Vortex Support v0.13.1
+
+Update directly in Vortex, or download from the [Nexus Mods page](https://www.nexusmods.com/site/mods/196?tab=files).
+
+## Changed
+
+- REDmods are deployed when the game is launched from Vortex, against the load order current at that moment, and the game does not start if the deployment fails. The REDdeploy tool button still deploys on demand. A notification shows while a deployment runs, and a failed one says why the game was not started.
+- On GOG installs the Play button starts `Cyberpunk2077.exe -modded` directly, as it does on Steam and Epic. The Galaxy launch chain hands the game output pipes nobody reads, which crashes redscript's logger. GOG Galaxy does not track playtime for these sessions.
+
+## Fixed
+
+- `redMod.exe` is run with the arguments it documents: a deployment compiles only what changed instead of forcing a full recompile every run, and the game root and RTTI schema paths are passed in the form redMod reads. Its output reaches the Vortex log and its exit code is checked.
+- Files under `r6\cache\modded` are cleared when the mod set is unchanged but the load order is not, the one case redMod does not detect itself.
+- Script mods and their frameworks that keep runtime data under `r6\storages` install through the redscript installer, with the storages files alongside the scripts. They previously fell through to the fallback installer. A mod that ships nothing but storages files installs as a redscript config-only mod.
+- Mods downloaded from Nexus Mods with the current download filename (`Name 28390 4.9.3 2026-09-28T20-02Z 9ka2kytex`) get their mod name from it. Loose script mods previously installed under `r6\scripts\<the whole filename>`.
+
+## Links
+
+- [Nexus Mods page](https://www.nexusmods.com/site/mods/196)
+- [GitHub repository](https://github.com/Nexus-Mods/game-cyberpunk2077)
+
 # Cyberpunk 2077 Vortex Support v0.13.0
 
 The first release maintained by Nexus Mods.
