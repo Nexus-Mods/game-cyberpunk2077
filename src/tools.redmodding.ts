@@ -36,6 +36,7 @@ import {
 } from "./tools.types";
 import {
   constant,
+  getErrorMessageOrDefault,
   S,
 } from "./util.functions";
 import {
@@ -163,7 +164,7 @@ export const makeREDdeployManualHookToGetLoadOrder: MakeToolStartHookWithStateFu
           return DummyCmdExeCallForToolToCallAfterRealWorkDone;
 
         } catch (error) {
-          vortexApi.log(`error`, `${me}: REDmod deploy through tool failed: ${S(error)}`);
+          vortexApi.log(`error`, `${me}: REDmod deploy through tool failed: ${getErrorMessageOrDefault(error)}`);
           return DummyCmdExeCallForToolToCallAfterRealWorkDone;
         }
       },
@@ -240,14 +241,16 @@ export const makeREDmodDeployOnLaunchHook: MakeToolStartHookWithStateFunc =
         try {
           await deployREDmodForCurrentLoadOrder(vortexApi, gameDir);
         } catch (error) {
-          vortexApi.log(`error`, `${me}: REDmod deployment failed, canceling launch`, S(error));
+          const reason = getErrorMessageOrDefault(error);
+
+          vortexApi.log(`error`, `${me}: REDmod deployment failed, canceling launch: ${reason}`);
 
           // Vortex cancels silently, so this notification is the only thing
           // telling the user why the game didn't start.
           showInfoNotification(
             vortexApi,
             InfoNotification.REDmodDeploymentFailed,
-            `The game wasn't started because deploying your REDmods failed. Check the log for details!`,
+            `The game wasn't started: ${reason}`,
           );
 
           // UserCanceled, because a launcher route reports anything else as an

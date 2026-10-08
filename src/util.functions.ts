@@ -46,6 +46,14 @@ export const S = (thing: unknown): string =>
 export const getErrorCode = (err: unknown): string | null =>
   (err instanceof Error && `code` in err && typeof err.code === `string` ? err.code : null);
 
+export const getErrorMessageOrDefault = (err: unknown): string => {
+  if (err instanceof Error) {
+    return err.message;
+  }
+
+  return typeof err === `string` ? err : `unknown error`;
+};
+
 
 export const identity = <T>(t: T): T => t;
 export const trueish = <T>(t: T): boolean => !!t;

@@ -91,6 +91,9 @@ import {
 import * as REDmoddingTools from "./tools.redmodding";
 import * as ExternalTools from "./tools.external";
 import {
+  asVortexStartHook,
+} from "./tools.hooks";
+import {
   ToolStartHook,
 } from "./tools.types";
 
@@ -260,7 +263,9 @@ const main = (vortexExt: VortexExtensionContext): boolean => {
   pipe(
     availableStartHooks,
     mapWithIndex((i: number, { hookId, doActualWorkInTheHookAndReturnDummyParams }) =>
-      forEffect(() => { vortexExt.registerStartHook(40 + i, hookId, doActualWorkInTheHookAndReturnDummyParams); })),
+      forEffect(() => {
+        vortexExt.registerStartHook(40 + i, hookId, asVortexStartHook(doActualWorkInTheHookAndReturnDummyParams));
+      })),
     forEachEffect,
     mapLeft((err) => {
       vortexApiLib.log(`error`, `${EXTENSION_NAME_INTERNAL} init: Failed to register start hook`, err);
