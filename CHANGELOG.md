@@ -5,6 +5,7 @@ Update directly in Vortex, or download from the [Nexus Mods page](https://www.ne
 ## Fixed
 
 - When deploying REDmods fails as the game is launched, the launch is canceled with only the "REDmod Deployment Failed" notification. Vortex previously also showed "Failed to run tool: Class constructor ProcessCanceled cannot be invoked without 'new'".
+- The "REDmod Deployment Failed" notification says why the deployment failed, such as the mod REDmod couldn't find, and the log has everything REDmod reported.
 
 ## Links
 

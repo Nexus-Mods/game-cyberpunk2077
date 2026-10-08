@@ -21,6 +21,28 @@ export interface REDmodDeployOutcome {
   output: string;
 }
 
+const REDMOD_DEPLOY_FAILED_LINE = `Commandlet deploy has failed.`;
+
+const REDMOD_STAGE_LINE_PREFIX = `[DEPLOY]`;
+
+// STATUS_CONTROL_C_EXIT: the console was closed or interrupted.
+const REDMOD_INTERRUPTED_EXIT_CODE = 0xC000013A;
+
+// redMod prints its reason as the last line before it reports the failure.
+export const redmodFailureReason = ({ exitCode, output }: REDmodDeployOutcome): string => {
+  if (exitCode === REDMOD_INTERRUPTED_EXIT_CODE) {
+    return `REDmod was interrupted`;
+  }
+
+  const lines = output.split(/\r?\n/).map((line) => line.trim());
+  const failedAt = lines.indexOf(REDMOD_DEPLOY_FAILED_LINE);
+  const reason = lines.slice(0, Math.max(failedAt, 0)).filter((line) => line.length > 0).at(-1);
+
+  return reason === undefined || reason.startsWith(REDMOD_STAGE_LINE_PREFIX)
+    ? `REDmod exited with code ${exitCode}`
+    : reason;
+};
+
 // redMod takes the root as a separate argument, every other flag with `=`.
 export const redmodDeployArgs = (gameDirPath: string): string[] => [
   `deploy`,

@@ -94,6 +94,7 @@ import {
   bbcodeBasics,
   constant,
   getErrorCode,
+  getErrorMessageOrDefault,
   heredoc,
   jsonp,
   S,
@@ -113,6 +114,7 @@ import {
 } from "./redmodding.metadata";
 import {
   redmodDeployedFilesNeedRebuilding,
+  redmodFailureReason,
   removeDeployedREDmodFiles,
   runREDmodDeploy,
 } from "./redmod.deploy";
@@ -522,7 +524,10 @@ const writeFileAtomically = (
         fs.statAsync(path.dirname(filePath)).then(() =>
           fs.writeFileAsync(`${filePath}.${loID}.tmp`, contents, { encoding: `utf8` })).then(() =>
           fs.renameAsync(`${filePath}.${loID}.tmp`, filePath)),
-      (error) => new Error(`Unable to write ${path.basename(filePath)} to disk: ${S(error)}`),
+      (error) => {
+        const errorCode = getErrorCode(error);
+        return new Error(`Couldn't write ${path.basename(filePath)}${errorCode === null ? `` : ` (${errorCode})`}`);
+      },
     ),
   );
 
@@ -588,18 +593,20 @@ const deployREDmodLoadOrder = async (
     const { exitCode, output } = await runREDmodDeploy(vortexApi, gameDirPath);
 
     if (output.length > 0) {
-      vortexApi.log(`debug`, `${me}: redMod said: ${output}`);
+      vortexApi.log(exitCode === 0 ? `debug` : `warn`, `${me}: redMod said: ${output}`);
     }
 
     if (exitCode !== 0) {
-      throw new Error(`REDmod deployment failed with ${exitCode}`);
+      throw new Error(redmodFailureReason({ exitCode, output }));
     }
 
     vortexApi.log(`info`, `${me}: REDmod deployment ${loID} complete!`);
     showInfoNotification(vortexApi, InfoNotification.REDmodDeploymentSucceeded);
   } catch (error) {
-    vortexApi.log(`error`, `${me}: REDmod deployment ${loID} failed`, S(error));
-    showInfoNotification(vortexApi, InfoNotification.REDmodDeploymentFailed);
+    const reason = getErrorMessageOrDefault(error);
+
+    vortexApi.log(`error`, `${me}: REDmod deployment ${loID} failed: ${reason}`);
+    showInfoNotification(vortexApi, InfoNotification.REDmodDeploymentFailed, reason);
     throw error;
   } finally {
     stopActivityNotification(vortexApi, ActivityNotification.REDmodDeploying);

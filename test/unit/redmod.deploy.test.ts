@@ -118,6 +118,25 @@ const makeApi = (loadOrder: VortexLoadOrder): VortexApi => ({
 const notificationIdsSentTo = (api: VortexApi): string[] =>
   (api.sendNotification as unknown as jest.Mock).mock.calls.map(([{ id }]) => id);
 
+const notificationMessagesSentTo = (api: VortexApi): string[] =>
+  (api.sendNotification as unknown as jest.Mock).mock.calls.map(([{ message }]) => message);
+
+const logLinesAt = (api: VortexApi, level: string): string[] =>
+  (api.log as unknown as jest.Mock).mock.calls
+    .filter(([loggedLevel]) => loggedLevel === level)
+    .map(([, message]) => message);
+
+const REDMOD_FAILURE_REASON = `Non-existant mod selected: "Mod X"!`;
+
+const REDMOD_FAILED_OUTPUT = [
+  `[DEPLOY] Stage 1/5 - Initialization`,
+  REDMOD_FAILURE_REASON,
+  ``,
+  `Commandlet deploy has failed.`,
+].join(`\r\n`);
+
+const STATUS_CONTROL_C_EXIT = 0xC000013A;
+
 beforeEach(() => {
   jest.clearAllMocks();
 
@@ -231,13 +250,52 @@ describe(`Deploying the current load order`, () => {
     expect(fs.removeAsync).not.toHaveBeenCalled();
   });
 
-  test(`fails when redMod reports an error`, async () => {
-    const order = vortexLoadOrderOf(`Mod X`);
+  test(`tells the user why redMod failed`, async () => {
+    const api = makeApi(vortexLoadOrderOf(`Mod X`));
 
-    redmodExitsWith(1, `could not load mod`);
+    redmodExitsWith(1, REDMOD_FAILED_OUTPUT);
 
-    await expect(deployREDmodForCurrentLoadOrder(makeApi(order), GAMEDIR))
-      .rejects.toThrow(`REDmod deployment failed with 1`);
+    await expect(deployREDmodForCurrentLoadOrder(api, GAMEDIR)).rejects.toThrow(REDMOD_FAILURE_REASON);
+
+    expect(notificationMessagesSentTo(api)).toContainEqual(expect.stringContaining(REDMOD_FAILURE_REASON));
+    expect(logLinesAt(api, `error`)).toContainEqual(expect.stringContaining(REDMOD_FAILURE_REASON));
+  });
+
+  test(`logs everything redMod said when it fails`, async () => {
+    const api = makeApi(vortexLoadOrderOf(`Mod X`));
+
+    redmodExitsWith(1, REDMOD_FAILED_OUTPUT);
+
+    await expect(deployREDmodForCurrentLoadOrder(api, GAMEDIR)).rejects.toThrow();
+
+    expect(logLinesAt(api, `warn`)).toContainEqual(expect.stringContaining(REDMOD_FAILED_OUTPUT));
+  });
+
+  test(`gives redMod's exit code when redMod gives no reason`, async () => {
+    const api = makeApi(vortexLoadOrderOf(`Mod X`));
+
+    redmodExitsWith(1, `[DEPLOY] Stage 1/5 - Initialization\r\n\r\nCommandlet deploy has failed.`);
+
+    await expect(deployREDmodForCurrentLoadOrder(api, GAMEDIR)).rejects.toThrow(`REDmod exited with code 1`);
+  });
+
+  test(`tells the user when redMod was interrupted`, async () => {
+    const api = makeApi(vortexLoadOrderOf(`Mod X`));
+
+    redmodExitsWith(STATUS_CONTROL_C_EXIT);
+
+    await expect(deployREDmodForCurrentLoadOrder(api, GAMEDIR)).rejects.toThrow(`REDmod was interrupted`);
+  });
+
+  test(`tells the user when the modlist can't be written`, async () => {
+    const api = makeApi(vortexLoadOrderOf(`Mod X`));
+
+    fs.renameAsync.mockRejectedValue(Object.assign(new Error(`illegal operation`), { code: `EISDIR` }));
+
+    await expect(deployREDmodForCurrentLoadOrder(api, GAMEDIR))
+      .rejects.toThrow(`Couldn't write modlist.txt (EISDIR)`);
+
+    expect(spawnMock).not.toHaveBeenCalled();
   });
 
   test(`shows the user that a deployment is running, until it finishes`, async () => {
@@ -308,8 +366,9 @@ describe(`Deploying REDmods when the game is launched`, () => {
   const launchHookFor = (
     order: VortexLoadOrder,
     activeProfile: VortexProfile = mockedActiveProfile,
+    api: VortexApi = makeApi(order),
   ): ((runParameters: VortexRunParameters) => Promise<VortexRunParameters>) => {
-    const vortexExt = { api: makeApi(order) } as unknown as VortexExtensionContext;
+    const vortexExt = { api } as unknown as VortexExtensionContext;
 
     const vortexApiLib = {
       log: jest.fn(),
@@ -415,6 +474,24 @@ describe(`Deploying REDmods when the game is launched`, () => {
     );
 
     await expect(launching).rejects.toThrow(`REDmod deployment failed, so the game wasn't started.`);
+  });
+
+  test(`tells the user why the game wasn't started`, async () => {
+    const order = vortexLoadOrderOf(`Mod X`);
+    const api = makeApi(order);
+
+    redmodExitsWith(1, REDMOD_FAILED_OUTPUT);
+
+    const launching = launchHookFor(order, mockedActiveProfile, api)(
+      runParametersFor(path.join(GAMEDIR, GAME_EXE_RELATIVE_PATH), [`-modded`]),
+    );
+
+    await expect(launching).rejects.toThrow();
+
+    const lastNotificationMessage = notificationMessagesSentTo(api).at(-1);
+
+    expect(lastNotificationMessage).toContain(`The game wasn't started`);
+    expect(lastNotificationMessage).toContain(REDMOD_FAILURE_REASON);
   });
 
 });
