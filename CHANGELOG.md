@@ -1,3 +1,16 @@
+# Cyberpunk 2077 Vortex Support v0.13.2
+
+Update directly in Vortex, or download from the [Nexus Mods page](https://www.nexusmods.com/site/mods/196?tab=files).
+
+## Fixed
+
+- When deploying REDmods fails as the game is launched, the launch is canceled with only the "REDmod Deployment Failed" notification. Vortex previously also showed "Failed to run tool: Class constructor ProcessCanceled cannot be invoked without 'new'".
+
+## Links
+
+- [Nexus Mods page](https://www.nexusmods.com/site/mods/196)
+- [GitHub repository](https://github.com/Nexus-Mods/game-cyberpunk2077)
+
 # Cyberpunk 2077 Vortex Support v0.13.1
 
 Update directly in Vortex, or download from the [Nexus Mods page](https://www.nexusmods.com/site/mods/196?tab=files).
