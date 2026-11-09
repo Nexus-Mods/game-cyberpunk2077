@@ -14,7 +14,10 @@ import {
 } from "../../src/load_order";
 import {
   redmodDeployArgs,
+  redmodDeployCommand,
   redmodDeployedFilesNeedRebuilding,
+  redmodDeployExe,
+  toWinePath,
 } from "../../src/redmod.deploy";
 import {
   GAME_EXE_RELATIVE_PATH,
@@ -166,6 +169,40 @@ describe(`REDmod deploy parameters`, () => {
 
   test(`lets redMod decide what to rebuild`, () => {
     expect(redmodDeployArgs(GAMEDIR)).not.toContain(`-force`);
+  });
+
+  test(`runs redMod directly when the game doesn't use Proton`, () => {
+    expect(redmodDeployCommand(GAMEDIR, { usesProton: false })).toEqual({
+      executable: redmodDeployExe(GAMEDIR),
+      args: redmodDeployArgs(GAMEDIR),
+      env: process.env,
+    });
+  });
+
+  test(`runs redMod in the game's Proton prefix with Windows paths`, () => {
+    const proton = {
+      usesProton: true,
+      protonPath: `/steam/steamapps/common/Proton 10.0`,
+      compatDataPath: `/steam/steamapps/compatdata/1091500`,
+    };
+
+    const command = redmodDeployCommand(GAMEDIR, proton);
+
+    expect(command.executable).toEqual(path.join(proton.protonPath, `proton`));
+    expect(command.args).toEqual([`run`, redmodDeployExe(GAMEDIR), ...redmodDeployArgs(GAMEDIR, toWinePath)]);
+    expect(command.args).toContain(toWinePath(GAMEDIR));
+    expect(command.env.STEAM_COMPAT_DATA_PATH).toEqual(proton.compatDataPath);
+    expect(command.env.STEAM_COMPAT_CLIENT_INSTALL_PATH).toBeDefined();
+  });
+
+  test(`says so when the game uses Proton but Vortex doesn't know which`, () => {
+    expect(() => redmodDeployCommand(GAMEDIR, { usesProton: true, compatDataPath: `/steam/compatdata/1091500` }))
+      .toThrow(`Couldn't find the Proton version the game uses`);
+  });
+
+  test(`maps Linux paths to Wine's Z: drive`, () => {
+    expect(toWinePath(`/home/me/Cyberpunk 2077/V2077/modlist.txt`))
+      .toEqual(`Z:\\home\\me\\Cyberpunk 2077\\V2077\\modlist.txt`);
   });
 
 });

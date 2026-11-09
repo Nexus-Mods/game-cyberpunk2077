@@ -1,7 +1,7 @@
 import {
   pipe,
 } from "fp-ts/lib/function";
-import path from "path/win32";
+import path from "path";
 import {
   map as mapE,
   isLeft,

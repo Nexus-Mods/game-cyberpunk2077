@@ -5,7 +5,7 @@ import {
   rm,
   writeFile,
 } from "node:fs/promises";
-import {
+import nodejsPath, {
   win32,
 } from "path";
 import {
@@ -117,7 +117,7 @@ const archiveModDirFor = (vortexApi: VortexApi): string => {
   if (gameDirPath === undefined) {
     throw new vortexUtil.NotFound(`Game not found`);
   }
-  return path.join(gameDirPath, ARCHIVE_MOD_CANONICAL_PREFIX);
+  return nodejsPath.join(gameDirPath, ARCHIVE_MOD_CANONICAL_PREFIX);
 };
 
 const archiveFileNamesIn = async (archiveModDir: string): Promise<string[]> => {
@@ -134,7 +134,7 @@ const archiveFileNamesIn = async (archiveModDir: string): Promise<string[]> => {
 
 const modListIn = async (archiveModDir: string): Promise<string[] | undefined> => {
   try {
-    const contents = await readFile(path.join(archiveModDir, ARCHIVE_MODLIST_FILENAME), `utf8`);
+    const contents = await readFile(nodejsPath.join(archiveModDir, ARCHIVE_MODLIST_FILENAME), `utf8`);
     return contents.split(/\r?\n/).map((line) => line.trim()).filter((line) => line.length > 0);
   } catch (error) {
     if (getErrorCode(error) === `ENOENT`) {
@@ -165,7 +165,7 @@ export const writeArchiveModList = async (
   archiveModDir: string,
   loadOrder: VortexLoadOrder,
 ): Promise<void> => {
-  const modListPath = path.join(archiveModDir, ARCHIVE_MODLIST_FILENAME);
+  const modListPath = nodejsPath.join(archiveModDir, ARCHIVE_MODLIST_FILENAME);
   const modList = modListFor(loadOrder);
   if (modList === undefined) {
     await rm(modListPath, { force: true });
