@@ -195,6 +195,11 @@ describe(`REDmod deploy parameters`, () => {
     expect(command.env.STEAM_COMPAT_CLIENT_INSTALL_PATH).toBeDefined();
   });
 
+  test(`says so when the game uses Proton but Vortex doesn't know which`, () => {
+    expect(() => redmodDeployCommand(GAMEDIR, { usesProton: true, compatDataPath: `/steam/compatdata/1091500` }))
+      .toThrow(`Couldn't find the Proton version the game uses`);
+  });
+
   test(`maps Linux paths to Wine's Z: drive`, () => {
     expect(toWinePath(`/home/me/Cyberpunk 2077/V2077/modlist.txt`))
       .toEqual(`Z:\\home\\me\\Cyberpunk 2077\\V2077\\modlist.txt`);

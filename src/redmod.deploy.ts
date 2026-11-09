@@ -87,8 +87,12 @@ export const redmodDeployCommand = (
 ): REDmodDeployCommand => {
   const executable = redmodDeployExe(gameDirPath);
 
-  if (!steamEntry?.usesProton || steamEntry.protonPath === undefined || steamEntry.compatDataPath === undefined) {
+  if (!steamEntry?.usesProton) {
     return { executable, args: redmodDeployArgs(gameDirPath), env: process.env };
+  }
+
+  if (steamEntry.protonPath === undefined || steamEntry.compatDataPath === undefined) {
+    throw new Error(`Couldn't find the Proton version the game uses`);
   }
 
   return {
