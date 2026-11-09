@@ -1,4 +1,4 @@
-import {
+import nodejsPath, {
   win32,
 } from "path";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -146,7 +146,7 @@ const loadOrderFilenameFor = (profile: VortexProfile): string =>
 // Should probably store this somewhere else, maybe in the
 // user profile dir, as long as we show the path somewhere?
 const loadOrderPathFor = (profile: VortexProfile, gameDirPath): string =>
-  path.join(gameDirPath, V2077_LOAD_ORDER_DIR, loadOrderFilenameFor(profile));
+  nodejsPath.join(gameDirPath, V2077_LOAD_ORDER_DIR, loadOrderFilenameFor(profile));
 
 
 //
@@ -521,12 +521,12 @@ const writeFileAtomically = (
   pipe(
     tryCatchTE(
       () =>
-        fs.statAsync(path.dirname(filePath)).then(() =>
+        fs.statAsync(nodejsPath.dirname(filePath)).then(() =>
           fs.writeFileAsync(`${filePath}.${loID}.tmp`, contents, { encoding: `utf8` })).then(() =>
           fs.renameAsync(`${filePath}.${loID}.tmp`, filePath)),
       (error) => {
         const errorCode = getErrorCode(error);
-        return new Error(`Couldn't write ${path.basename(filePath)}${errorCode === null ? `` : ` (${errorCode})`}`);
+        return new Error(`Couldn't write ${nodejsPath.basename(filePath)}${errorCode === null ? `` : ` (${errorCode})`}`);
       },
     ),
   );
@@ -572,7 +572,7 @@ const deployREDmodLoadOrder = async (
   startActivityNotification(vortexApi, ActivityNotification.REDmodDeploying);
 
   try {
-    const modListPath = path.join(gameDirPath, V2077_MODLIST_PATH);
+    const modListPath = nodejsPath.join(gameDirPath, V2077_MODLIST_PATH);
     const nextModList = loadOrderToREDdeployModList(v2077LoadOrderToDeploy);
 
     const previousModList = await modListOnDisk(modListPath);
