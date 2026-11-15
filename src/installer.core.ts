@@ -1,4 +1,4 @@
-import { win32 } from "path";
+import path from "path";
 import {
   VortexApi,
   VortexTestResult,
@@ -15,8 +15,6 @@ import {
   ModInfo,
 } from "./installers.types";
 import { FeatureSet } from "./features";
-
-const path = win32;
 
 const CET_CORE_IDENTIFIERS = [path.normalize(`bin/x64/plugins/cyber_engine_tweaks.asi`)];
 

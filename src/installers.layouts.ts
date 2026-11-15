@@ -124,16 +124,16 @@ export const enum CoreRedscriptLayout {
 }
 
 export const REDSCRIPT_CORE_FILES = [
-  path.normalize(`engine\\config\\base\\scripts.ini`),
-  path.normalize(`engine\\tools\\scc.exe`),
-  path.normalize(`r6\\config\\cybercmd\\scc.toml`),
+  path.normalize(`engine/config/base/scripts.ini`),
+  path.normalize(`engine/tools/scc.exe`),
+  path.normalize(`r6/config/cybercmd/scc.toml`),
 ];
 export const REDSCRIPT_CORE_REQUIRED_FILES = REDSCRIPT_CORE_FILES;
 
 export const DEPRECATED_REDSCRIPT_CORE_FILES = [
-  path.normalize(`engine\\config\\base\\scripts.ini`),
-  path.normalize(`engine\\tools\\scc.exe`),
-  path.normalize(`r6\\scripts\\redscript.toml`),
+  path.normalize(`engine/config/base/scripts.ini`),
+  path.normalize(`engine/tools/scc.exe`),
+  path.normalize(`r6/scripts/redscript.toml`),
 ];
 export const DEPRECATED_REDSCRIPT_CORE_REQUIRED_FILES = DEPRECATED_REDSCRIPT_CORE_FILES;
 
