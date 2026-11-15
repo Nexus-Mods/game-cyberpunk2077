@@ -1,6 +1,4 @@
-import {
-  win32,
-} from "path";
+import path from "path";
 import {
   pipe,
 } from "fp-ts/lib/function";
@@ -171,9 +169,6 @@ import {
   installAudiowareMod,
   testForAudiowareMod,
 } from "./installer.audioware";
-
-// Ensure we're using win32 conventions
-const path = win32;
 
 const PRIORITY_FOR_PIPELINE_INSTALLER = 30; // Fomod is 20. Leave a couple slots if someone wants in before us
 const PRIORITY_STARTING_NUMBER = PRIORITY_FOR_PIPELINE_INSTALLER + 1;
